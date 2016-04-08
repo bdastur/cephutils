@@ -1,0 +1,80 @@
+#####################################################################
+# Zabbix Deploy Ansible Variables.
+#####################################################################
+
+zabbix_server: <server name/ip address>     # Required.
+
+# http_proxy: "<proxy server>:<port>"       # Optional
+
+upstream_repo: <true|false>                 # Required (either true or false)
+rpm_location: "http://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-release-3.0-1.el7.noarch.rpm"
+
+server_packages:                            # Required.
+  - zabbix-server-mysql
+  - zabbix-web-mysql
+  - mariadb-server
+
+agent_packages:                             # Required
+  - zabbix-agent
+
+agent_services:                             # Required
+  - zabbix-agent
+
+
+
+#####################################################################
+# Agent Configuration Options.
+#####################################################################
+pid_file: "/var/run/zabbix/zabbix_agentd.pid"
+log_file: "/var/log/zabbix/zabbix_agentd.log"
+log_file_size: 0
+
+# valid values 0 - 4.
+# debug_level: 4                           # Optional (Default 4)
+
+# source_interface: "intf name.eg eth0"
+# source_ip: "<agent ip addr>"
+
+enable_remote_commands: 0                  # Optional
+log_remote_commands: 0                     # Optional
+
+listen_port: 10050
+listen_ip: "<agent ip addr>"
+start_agents: 3
+
+
+##### Active checks related
+server_active: "<server ip addr>"
+
+# Optional (Default is ansible_ssh_hostname)
+hostname: "<agent hostname>"
+# hostname_item: "system.hostname"
+
+# host_metadata:
+host_metadata_item: "system.uname"
+
+# refresh_active_checks: 120
+# buffer_send: 5
+# buffer_size: 100
+# max_lines_per_second: 100
+
+##############################################
+# Advanced Parameters
+##############################################
+# alias: <alias name>:<value> 
+
+
+timeout: 10
+
+allow_root: 0
+include: "/etc/zabbix/zabbix_agent.d/d"
+
+# unsafe_user_parameters: 0
+# user_parameter:
+
+##############################################
+# Loadable modules
+##############################################
+# load_module_path:
+# load_module:
+
