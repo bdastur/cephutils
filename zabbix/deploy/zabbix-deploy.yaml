@@ -1,0 +1,17 @@
+# Playbook: Zabbix Deploy. 
+#
+#
+- name: Deploy Zabbix Server
+  hosts: "{{ servers }}"
+  max_fail_percentage: 0 
+  user: "{{ username }}"
+  roles:
+    - { role: "zabbix-server" }
+
+- name: Deploy Zabbix Agent
+  hosts: "{{ agents }}"
+  max_fail_percentage: 0 
+  user: "{{ username }}"
+  roles:
+    - { role: "zabbix-agent" }
+
