@@ -1,0 +1,81 @@
+- name: Connectivity test
+  ping:
+
+- name: debug msg
+  debug:
+    msg: "{{ hostvars | to_nice_json }}"
+  when: DEBUG_ON is defined
+  tags:
+    - debug
+
+- name: debug msg
+  debug:
+    msg: " ansible hostname: {{ ansible_default_ipv4.address }} intf addr: {{ hostvars[ansible_ssh_host]['ansible_' + source_interface]['ipv4']['address'] }} "
+  tags:
+    - debug
+
+- name: Install RPM For Zabbix.
+  yum:
+    name: "{{ rpm_location }}"
+    state: present
+    update_cache: yes
+  register: check_rpm_install
+  until: check_rpm_install|success
+  retries: 3
+  delay: 3
+  environment:
+    http_proxy: "{{ http_proxy }}"
+  when: upstream_repo == true
+  tags:
+    - agent_install
+
+- name: Install agent Packages (upstream repo)
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: agent_packages
+  environment:
+    http_proxy: "{{ http_proxy }}"
+  when: upstream_repo == true
+  tags:
+    - agent_install
+
+- name: Install Packages from local repo. (repos.d file is presumed set)
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: agent_packages
+  when: upstream_repo == false 
+  tags:
+    - agent_install
+
+- name: Generate the zabbix_agent configuration file
+  template:
+     src: "{{ item.src }}"
+     dest: "{{ item.dest }}"
+     owner: root
+     group: root
+  with_items:
+    - { src: "zabbix_agent.conf.j2",
+        dest: "/etc/zabbix/zabbix_agentd.conf" }
+  tags:
+    - agent_config
+
+- name: Restart Zabbix agent 
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items: agent_services
+  tags:
+    - agent_restart
+
