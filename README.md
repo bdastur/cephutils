@@ -1,5 +1,5 @@
 # cephutils
 ---
 
-Collection to Ceph utilities:
+Collection of Ceph utilities:
 
