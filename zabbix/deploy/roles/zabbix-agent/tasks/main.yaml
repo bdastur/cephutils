@@ -10,7 +10,7 @@
 
 - name: debug msg
   debug:
-    msg: " ansible hostname: {{ ansible_default_ipv4.address }} intf addr: {{ hostvars[ansible_ssh_host]['ansible_' + source_interface]['ipv4']['address'] }} "
+    msg: " ansible hostname: {{ ansible_default_ipv4.address }} intf addr: {{ hostvars[inventory_hostname]['ansible_' + source_interface]['ipv4']['address'] }} "
   tags:
     - debug
 
@@ -66,8 +66,8 @@
      owner: root
      group: root
   with_items:
-    - { src: "zabbix_agent.conf.j2",
-        dest: "/etc/zabbix/zabbix_agentd.conf" }
+    - { src: "zabbix_agentd.conf.j2",
+        dest: "/tmpzabbix_agentd.conf" }
   tags:
     - agent_config
 

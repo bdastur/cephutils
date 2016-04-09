@@ -1,0 +1,7 @@
+[zabbix_servers]
+<server 1>
+<server 2>
+
+[zabbix_agents]
+<host 1>  source_ip: <ip addr>
+<host 2>  source_ip: <ip addr>

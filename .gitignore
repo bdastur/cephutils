@@ -66,4 +66,4 @@ target/
 *ropeproject*
 
 zabbix/deploy/group_vars/all
-
+zabbix/deploy/inventory/hosts

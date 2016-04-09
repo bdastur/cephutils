@@ -1,2 +1,2 @@
-source_ip: "{% if source_interface is defined %}{{ hostvars[ansible_ssh_host]['ansible_' + source_interface]['ipv4']['address'] }}{% endif %}"
+source_ip: "{% if source_interface is defined %}{{ hostvars[inventory_hostname]['ansible_' + source_interface]['ipv4']['address'] }}{% endif %}"
 
