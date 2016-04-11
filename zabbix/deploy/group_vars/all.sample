@@ -9,10 +9,20 @@ zabbix_server: <server name/ip address>     # Required.
 upstream_repo: <true|false>                 # Required (either true or false)
 rpm_location: "http://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-release-3.0-1.el7.noarch.rpm"
 
-server_packages:                            # Required.
+server_packages:                            # Requried
   - zabbix-server-mysql
   - zabbix-web-mysql
+
+mysql_packages:                             # Required
   - mariadb-server
+  - MySQL-python
+
+mariadb_services:                           # Required
+  - mariadb  
+
+server_services:                            # Required
+  - zabbix-server
+  - httpd
 
 agent_packages:                             # Required
   - zabbix-agent
@@ -20,6 +30,21 @@ agent_packages:                             # Required
 agent_services:                             # Required
   - zabbix-agent
 
+
+#########################################
+# Server Configuration
+#########################################
+
+# MYSQL DB Configuration
+db_host: 127.0.0.1
+MYSQL_DB_NAME: zabbix
+MYSQL_DB_USERNAME: zabbix
+MYSQL_DB_PASSWORD: password
+MYSQL_DB_PORT: 3306
+
+server_listen_ip: 0.0.0.0
+agent_timeout: 5
+log_slow_queries: 3000
 
 
 #####################################################################

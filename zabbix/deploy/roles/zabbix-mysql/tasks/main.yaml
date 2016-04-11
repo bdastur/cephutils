@@ -1,0 +1,67 @@
+- name: Install Packages (upstream repo)
+  yum:
+    name: "{{ item }}" 
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: mysql_packages
+  environment:
+    http_proxy: "{{ http_proxy }}"
+  when: upstream_repo == true
+  tags:
+    - mysql_install
+
+- name: Install Packages from local repo. (repos.d file is presumed set)
+  yum:
+    name: "{{ item }}" 
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: mysql_packages
+  when: upstream_repo == false
+  tags:
+    - mysql_install
+
+- name: Start MariaDB server.
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items: mariadb_services
+  tags:
+    - mysql_restart
+
+- name: Create a mysql DB for zabbix
+  mysql_db:
+    name: "{{ MYSQL_DB_NAME }}"
+    state: present
+  tags:
+    - mysql_dbcreate
+
+- name: Grant priviledges to zabbx user.
+  mysql_user:
+    name: "{{ MYSQL_DB_USERNAME }}"
+    password: "{{ MYSQL_DB_PASSWORD }}"
+    priv: "{{ MYSQL_DB_NAME }}.*:ALL"
+    state: present
+    host: localhost 
+  tags:
+    - mysql_userpriv
+
+- name: Grant priviledges to zabbx user.
+  mysql_user:
+    name: "{{ MYSQL_DB_USERNAME }}"
+    password: "{{ MYSQL_DB_PASSWORD }}"
+    priv: "{{ MYSQL_DB_NAME }}.*:ALL"
+    state: present
+    host: "%"
+  tags:
+    - mysql_userpriv
+
+
+
