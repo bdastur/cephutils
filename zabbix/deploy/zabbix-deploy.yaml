@@ -1,6 +1,12 @@
 # Playbook: Zabbix Deploy. 
 #
 #
+- name: Deploy zabbix mysql
+  hosts: zabbix_mysql
+  max_fail_percentage: 0
+  roles:
+    - { role: "zabbix-mysql" }
+
 - name: Deploy Zabbix Server
   hosts: zabbix_servers 
   max_fail_percentage: 0 

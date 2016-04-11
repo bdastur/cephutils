@@ -67,7 +67,7 @@
      group: root
   with_items:
     - { src: "zabbix_agentd.conf.j2",
-        dest: "/tmpzabbix_agentd.conf" }
+        dest: "/tmp/zabbix_agentd.conf" }
   tags:
     - agent_config
 

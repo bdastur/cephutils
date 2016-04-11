@@ -1,2 +1,99 @@
 - name: Connectivity test
   ping: 
+
+- name: debug msg
+  debug:
+    msg: "{{ hostvars | to_nice_json }}"
+  when: DEBUG_ON is defined
+  tags:
+    - debug
+
+- name: Install RPM For Zabbix.
+  yum:
+    name: "{{ rpm_location }}"
+    state: present
+    update_cache: yes
+  register: check_rpm_install
+  until: check_rpm_install|success
+  retries: 3
+  delay: 3
+  environment:
+    http_proxy: "{{ http_proxy }}"
+  when: upstream_repo == true
+  tags:
+    - server_install
+
+- name: Install Packages (upstream repo)
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: server_packages
+  environment:
+    http_proxy: "{{ http_proxy }}"
+  when: upstream_repo == true
+  tags:
+    - server_install
+
+- name: Install Packages from local repo. (repos.d file is presumed set)
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  register: check_pkg_install
+  until: check_pkg_install|success
+  retries: 3
+  delay: 3
+  with_items: server_packages
+  when: upstream_repo == false 
+  tags:
+    - server_install
+
+- name: Check for the hidden file 
+  stat:
+    path: /etc/zabbix/.zcat_run
+  register:  zcat_stat
+
+- name: Initialize zabbix DB
+  shell: cd /usr/share/doc/zabbix-server-mysql-3.0.1/; zcat create.sql.gz | mysql -u root zabbix
+  tags:
+    - server_dbinit
+  when: zcat_stat.stat.exists == False
+
+- name: Create the hidden file
+  file: 
+    path: /etc/zabbix/.zcat_run
+    state: file
+
+- name: Generate the zabbix_server configuration file
+  template:
+     src: "{{ item.src }}"
+     dest: "{{ item.dest }}"
+     owner: root
+     group: root
+  with_items:
+    - { src: "zabbix_server.conf.j2",
+        dest: "/etc/zabbix/zabbix_server.conf" }
+  tags:
+    - server_config
+
+- name: Update the zabbix.conf file in httpd conf.d
+  lineinfile:
+    dest: /etc/httpd/conf.d/zabbix.conf
+    state: present
+    regexp: ".*php_value date.timezone.*"
+    line: "php_value date.timezone UTC"
+  tags:
+    - server_config
+    - httpd_config
+
+- name: Start zabbix server
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items: server_services
+
