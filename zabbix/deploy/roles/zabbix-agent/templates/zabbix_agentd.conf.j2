@@ -141,7 +141,7 @@ ServerActive={{ server_active }}
 # Default:
 # Hostname=
 
-Hostname={{ hostname }}
+Hostname={{ hostvars[inventory_hostname]['ansible_fqdn'] }}
 
 ### Option: HostnameItem
 #	Item used for generating Hostname if it is undefined. Ignored if Hostname is defined.
@@ -151,7 +151,7 @@ Hostname={{ hostname }}
 # Default:
 # HostnameItem=system.hostname
 {% if hostname_item is defined  %}
-  HostnameItem={{ hostname_item }}
+HostnameItem={{ hostname_item }}
 {% endif %}
 
 ### Option: HostMetadata
@@ -165,7 +165,7 @@ Hostname={{ hostname }}
 # Default:
 # HostMetadata=
 {% if host_metadata is defined %}
-  HostMetadata={{ host_metadata }}
+HostMetadata={{ host_metadata }}
 {% endif %}
 
 ### Option: HostMetadataItem
@@ -179,7 +179,7 @@ Hostname={{ hostname }}
 # Default:
 # HostMetadataItem=
 {% if host_metadata_item is defined %}
-  HostMetadataItem={{ host_metadata_item }}
+HostMetadataItem={{ host_metadata_item }}
 {% endif %}
 
 ### Option: RefreshActiveChecks
@@ -190,7 +190,7 @@ Hostname={{ hostname }}
 # Default:
 # RefreshActiveChecks=120
 {% if refresh_active_checks is defined %}
- RefreshActiveChecks={{ refresh_active_checks }}
+RefreshActiveChecks={{ refresh_active_checks }}
 {% endif %}
 
 ### Option: BufferSend
@@ -201,7 +201,7 @@ Hostname={{ hostname }}
 # Default:
 # BufferSend=5
 {% if buffer_send is defined %}
-  BufferSend={{ buffer_send }}
+ BufferSend={{ buffer_send }}
 {% endif %} 
 
 ### Option: BufferSize
@@ -213,7 +213,7 @@ Hostname={{ hostname }}
 # Default:
 # BufferSize=100
 {% if buffer_size is defined %}
-  BufferSize={{ buffer_size }}
+BufferSize={{ buffer_size }}
 {% endif %}
 
 ### Option: MaxLinesPerSecond
@@ -227,7 +227,7 @@ Hostname={{ hostname }}
 # Default:
 # MaxLinesPerSecond=100
 {% if max_lines_per_second is defined %}
-  MaxLinesPerSecond= {{ max_lines_per_second }}
+MaxLinesPerSecond= {{ max_lines_per_second }}
 {% endif %}
 
 ############ ADVANCED PARAMETERS #################
@@ -245,7 +245,7 @@ Hostname={{ hostname }}
 # Range:
 # Default:
 {% if alias is defined %}
-  Alias:{{ alias }}
+Alias:{{ alias }}
 {% endif %}
 
 
@@ -257,7 +257,7 @@ Hostname={{ hostname }}
 # Default:
 # Timeout=3
 {% if timeout is defined %}
-  Timeout={{ timeout }}
+Timeout={{ timeout }}
 {% endif %}
 
 
@@ -271,7 +271,7 @@ Hostname={{ hostname }}
 # Default:
 # AllowRoot=0
 {% if allow_root is defined %}
-  AllowRoot={{ allow_root }}
+AllowRoot={{ allow_root }}
 {% endif %}
 
 ### Option: Include
@@ -282,7 +282,7 @@ Hostname={{ hostname }}
 # Default:
 # Include=
 {% if include is defined %}
-  Include={{ include }}
+Include={{ include }}
 {% endif %}
 
 
@@ -301,7 +301,7 @@ Hostname={{ hostname }}
 # Default:
 # UnsafeUserParameters=0
 {% if unsafe_user_parameters is defined %}
-  UnsafeUserParameters={{ unsafe_user_parameters }}
+UnsafeUserParameters={{ unsafe_user_parameters }}
 {% endif %}
 
 ### Option: UserParameter
@@ -313,7 +313,7 @@ Hostname={{ hostname }}
 # Default:
 # UserParameter=
 {% if user_parameters is defined %}
-  UserParameters={{ user_parameters }}
+UserParameters={{ user_parameters }}
 {% endif %}
 
 ####### LOADABLE MODULES #######
@@ -326,7 +326,7 @@ Hostname={{ hostname }}
 # Default:
 # LoadModulePath=${libdir}/modules
 {% if load_module_path is defined %}
-  LoadModulePath={{ load_module_path }}
+LoadModulePath={{ load_module_path }}
 {% endif %}
 
 ### Option: LoadModule
@@ -339,6 +339,6 @@ Hostname={{ hostname }}
 # Default:
 # LoadModule=
 {% if load_module is defined %}
-  LoadModule={{ load_module }}
+LoadModule={{ load_module }}
 {% endif %}
 
