@@ -39,3 +39,8 @@ class CephlibUt(unittest.TestCase):
 
         print "total: %d, in: %d, out: %d" % (totalosd, inosd, outosd)
 
+    def test_get_ceph_osd_df_json(self):
+        print "test get_ceph_osd_df_json"
+        testlib = self.init_cephlib()
+        data = testlib.get_ceph_osd_df_json()
+        print "data: ", data

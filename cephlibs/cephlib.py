@@ -47,6 +47,19 @@ class Cephlib(object):
 
         return buf
 
+    def get_ceph_osd_df_json(self):
+        '''
+        Get ceph osd df output
+        '''
+        cmd = {"prefix": "osd df", "format": "json"}
+        try:
+            ret, buf, err = self.cluster.mon_command(json.dumps(cmd), "")
+        except rados.Error as err:
+            print "Rados Error: [get osd dump] [%s]" % err
+            return None
+
+        return buf
+
     def get_ceph_osd_count(self):
         '''
         Get the Total, up, in osds
